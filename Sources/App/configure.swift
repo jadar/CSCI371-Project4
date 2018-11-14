@@ -1,5 +1,7 @@
 import FluentSQLite
+import MySQL
 import Vapor
+import Leaf
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -13,21 +15,38 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
+    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
+
     services.register(middlewares)
 
-    // Configure a SQLite database
-    let sqlite = try SQLiteDatabase(storage: .memory)
+    // Configure MySQL database.
+    let mysql = MySQLDatabase(config: MySQLDatabaseConfig(hostname: "127.0.0.1",
+                                                          port: 3306,
+                                                          username: "",
+                                                          password: "",
+                                                          database: "proj",
+                                                          capabilities: .default,
+                                                          characterSet: .utf8_general_ci,
+                                                          transport: .cleartext))
 
     /// Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
-    databases.add(database: sqlite, as: .sqlite)
+    databases.add(database: mysql, as: .mysql)
     services.register(databases)
 
-    /// Configure migrations
-    var migrations = MigrationConfig()
-    migrations.add(model: Todo.self, database: .sqlite)
-    services.register(migrations)
+    // Set default databases.
+    Driver.defaultDatabase = .mysql
 
+//    /// Configure migrations
+//    var migrations = MigrationConfig()
+//    migrations.add(model: Todo.self, database: .sqlite)
+//    services.register(migrations)
+
+
+    // Configure the templating engine.
+    let leaf = LeafProvider()
+    try services.register(leaf)
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 }
+

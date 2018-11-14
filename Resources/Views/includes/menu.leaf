@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+#//	<li class="nav-item{% if data.subpages %} dropdown{% endif %}">
+	<li class="nav-item">
+		<a href="/" class="nav-link active"><i class="fe fe-home"></i>Home</a>
+	</li>	
+</ul>

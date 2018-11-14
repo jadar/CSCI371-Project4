@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+	#embed("includes/head")
+</head>
+<body class="">
+
+<div class="page">
+	#get(content)
+</div>
+
+</body>
+</html>

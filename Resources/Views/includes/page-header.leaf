@@ -1,0 +1,13 @@
+<div class="page-header">
+	<h1 class="page-title">
+		#get(pageTitle)
+	</h1>
+
+	#if(pageSubtitle) {
+		<div class="page-subtitle">#get(pageSubtitle)</div>
+	}
+
+	#if(options) {
+		<div class="page-options">#get(options)</div>
+	}
+</div>

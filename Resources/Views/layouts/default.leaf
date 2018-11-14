@@ -1,0 +1,11 @@
+#set("content") {
+	<div class="flex-fill">
+		#embed("includes/header")
+
+		<div class="my-3 my-md-5">
+			#get(content)
+		</div>
+	</div>
+}
+
+#embed("layouts/base")
