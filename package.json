@@ -14,7 +14,7 @@
     "tabler-ui": "0.0.32"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
