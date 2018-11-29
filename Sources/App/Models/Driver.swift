@@ -17,19 +17,21 @@ final class Driver: _MySQLModel {
     var driverlname: String
     var callsign: String
     var dateofbirth: Date
-//    var radioid:
-//    var drivingtruckid:
+    var radioid: Radio.ID
+    var drivingtruckid: Truck.ID?
 
     static var idKey: IDKey = \.driverid
 
     /// Creates a new `Driver`.
-    init(driverid: String?, driverlicenseno: String, driverfname: String, driverlname: String, callsign: String, dateofbirth: Date) {
+    init(driverid: String?, driverlicenseno: String, driverfname: String, driverlname: String, callsign: String, dateofbirth: Date, radioid: Radio.ID, drivingtruckid: Truck.ID?) {
         self.driverid = driverid
         self.driverlicenseno = driverlicenseno
         self.driverfname = driverfname
         self.driverlname = driverlname
         self.callsign = callsign
         self.dateofbirth = dateofbirth
+        self.radioid = radioid
+        self.drivingtruckid = drivingtruckid
     }
 }
 
