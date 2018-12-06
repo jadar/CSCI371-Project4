@@ -1,0 +1,18 @@
+#set("content") {
+	<div class="page-single">
+		<div class="container">
+			<div class="row">
+				#//{{ page.col-class | default: 'col-login' }}
+				<div class="col col-login mx-auto">
+					<div class="text-center mb-6">
+						<img src="./img/ablegatio.svg" class="h-6" alt="">
+					</div>
+
+					#get(content)
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+#embed("layouts/base")

@@ -2,8 +2,7 @@
 	<div class="container">
 		<div class="d-flex">
 			<a class="header-brand" href="/index.html">
-#//				<!-- <img src="/demo/brand/tabler.svg" class="header-brand-img" alt="tabler logo"> -->
-				123 Dispatch Company
+				<img src="/img/ablegatio.svg" class="header-brand-img" alt="tabler logo">
 			</a>
 
 			<div class="d-flex order-lg-2 ml-auto">
@@ -11,7 +10,7 @@
 					<a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
 #//						<span class="avatar" #/*style="background-image: url({{ site.base }}/{{ user.photo }})"*/></span>
 						<span class="ml-2 d-none d-lg-block">
-							<span class="text-default">#get(user.name) #get(user.surname)</span>
+							<span class="text-default">#get(user.username) #get(user.surname)</span>
 							<small class="text-muted d-block mt-1">Administrator</small>
 						</span>
 					</a>
@@ -33,8 +32,8 @@
 						<a class="dropdown-item" href="#">
 							<i class="dropdown-icon fe fe-help-circle"></i> Need help?
 						</a>
-						<a class="dropdown-item" href="#">
-							<i class="dropdown-icon fe fe-log-out"></i> Sign out
+						<a class="dropdown-item" href="/logout">
+							<i class="dropdown-icon fe fe-log-out"></i> Log out
 						</a>
 					</div>
 				</div>
