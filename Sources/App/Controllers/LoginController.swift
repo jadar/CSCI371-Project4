@@ -22,28 +22,41 @@ final class LoginController {
     }
 
     func loginForm(_ req: Request) throws -> Future<Response> {
-//        let renderer = try req.view()
         struct LoginContent: Content {
             var username: String
             var password: String
         }
 
+        let renderer = try req.view()
         let contentFuture = try req.content.decode(LoginContent.self)
         let userFuture = contentFuture.then { (content) -> Future<User?> in
             return User.authenticate(username: content.username, password: content.password, using: BCryptDigest(), on: req)
+        }.map { (result) -> User? in
+            if let user = result {
+                try req.authenticate(user)
+            }
+
+            return result
         }
 
-        return userFuture.map { (user) -> (Response) in
-            guard let user = user else {
-                throw Abort(.forbidden)
+        let responseFuture = userFuture.then { (result) -> EventLoopFuture<Response> in
+            if result != nil {
+                let redirectResponse = req.redirect(to: "/")
+                return req.future(redirectResponse)
+            } else {
+                return renderer.render("login").map { (view) -> Response in
+                    let response = req.response()
+                    try response.content.encode(view)
+                    return response
+                }
             }
-            try req.authenticate(user)
-            return req.redirect(to: "/")
         }
+        
+        return responseFuture
     }
 
     func logout(_ req: Request) throws -> Response {
-        try req.unauthenticate(User.self)
+        try req.unauthenticateSession(User.self)
         return req.redirect(to: "/login")
     }
 }

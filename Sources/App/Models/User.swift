@@ -16,9 +16,9 @@ final class User: _MySQLModel {
     var username: String
     var email: String
 
-    var sessionID: String?
+//    var sessionID: String?
     var passwordHash: String
-    
+
     static var idKey: IDKey = \.userID
 
     /// Creates a new ``.
@@ -30,13 +30,7 @@ final class User: _MySQLModel {
     }
 }
 
-extension User: SessionAuthenticatable {
-    static func authenticate(sessionID: SessionID, on connection: DatabaseConnectable) -> EventLoopFuture<User?> {
-        return User.query(on: connection)
-            .filter(\.sessionID, .equal, sessionID)
-            .first()
-    }
-}
+extension User: SessionAuthenticatable { }
 
 extension User: PasswordAuthenticatable {
     static var usernameKey: WritableKeyPath<User, String> = \.username

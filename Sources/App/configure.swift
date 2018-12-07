@@ -14,14 +14,16 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     let router = EngineRouter.default()
     let authenticatedRouter = router.grouped(session)
     try routes(authenticatedRouter)
+    
     services.register(router, as: Router.self)
 
+    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
+    
     /// Register middleware
     var middlewaresConfig = MiddlewareConfig() // Create empty middleware config
     try middlewares(config: &middlewaresConfig)
+//    middlewaresConfig.use(session)
     services.register(middlewaresConfig)
-
-    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
 
     /// Register the configured SQLite database to the database config.
     var databasesConfig = DatabasesConfig()

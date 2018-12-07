@@ -20,9 +20,7 @@ final class DriverController {
     /// Returns a list of all `Driver`s.
     func index(_ req: Request) throws -> Future<View> {
         let renderer = try req.view()
-        guard let user = try req.authenticated(User.self) else {
-            throw Abort(.forbidden)
-        }
+        let user = try req.requireAuthenticated(User.self)
 
         return Driver.query(on: req).all().then { (res) -> Future<View> in
             let context = DriverContext(data: res, user: user)
