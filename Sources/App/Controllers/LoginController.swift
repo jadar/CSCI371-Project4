@@ -27,6 +27,11 @@ final class LoginController {
             var password: String
         }
 
+        struct LoginErrorContent: Encodable {
+            var error: String
+            var usernameInput: String
+        }
+
         let renderer = try req.view()
         let contentFuture = try req.content.decode(LoginContent.self)
         let userFuture = contentFuture.then { (content) -> Future<User?> in
@@ -44,14 +49,15 @@ final class LoginController {
                 let redirectResponse = req.redirect(to: "/")
                 return req.future(redirectResponse)
             } else {
-                return renderer.render("login").map { (view) -> Response in
-                    let response = req.response()
-                    try response.content.encode(view)
-                    return response
+                return renderer.render("login", LoginErrorContent(error: "Invalid login.", usernameInput: "wrong"))
+                    .map { (view) -> Response in
+                        let response = req.response()
+                        try response.content.encode(view)
+                        return response
                 }
             }
         }
-        
+
         return responseFuture
     }
 
