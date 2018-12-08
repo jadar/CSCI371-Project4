@@ -21,41 +21,46 @@ final class LoginController {
         return renderer.render("login")
     }
 
-    func loginForm(_ req: Request) throws -> Future<Response> {
+    func loginForm(_ req: Request) throws -> Future<AnyResponse> {
         struct LoginContent: Content {
             var username: String
             var password: String
         }
 
-        struct LoginErrorContent: Encodable {
+        struct LoginErrorContent: Error, Encodable {
             var error: String
             var usernameInput: String
         }
 
-        let renderer = try req.view()
-        let contentFuture = try req.content.decode(LoginContent.self)
-        let userFuture = contentFuture.then { (content) -> Future<User?> in
-            return User.authenticate(username: content.username, password: content.password, using: BCryptDigest(), on: req)
-        }.map { (result) -> User? in
-            if let user = result {
-                try req.authenticate(user)
-            }
+        let renderer = try req.view() // Grab a renderer.
 
-            return result
-        }
+        let contentFuture = try req.content.decode(LoginContent.self)  // Decode the form data.
 
-        let responseFuture = userFuture.then { (result) -> EventLoopFuture<Response> in
-            if result != nil {
-                let redirectResponse = req.redirect(to: "/")
-                return req.future(redirectResponse)
-            } else {
-                return renderer.render("login", LoginErrorContent(error: "Invalid login.", usernameInput: "wrong"))
-                    .map { (view) -> Response in
-                        let response = req.response()
-                        try response.content.encode(view)
-                        return response
+        // Construct a future that tries to authenticate with the given username/password.
+        // Compounds the original context for additional context.
+        let userFuture = contentFuture
+            .then({ User.authenticate(username: $0.username, password: $0.password, on: req).and(result: $0) })
+            .map { (result, content) -> User in
+                guard let user = result else {  // Throw an error when the user is nil!
+                    throw LoginErrorContent(error: "Invalid login", usernameInput: content.username)
                 }
+
+                // Authenticate the request with the user.
+                try req.authenticate(user)
+                return user
             }
+
+        // Construct a future that uses the user.
+        let responseFuture = userFuture.then { (result) -> EventLoopFuture<AnyResponse> in
+            let redirectResponse = req.redirect(to: "/")  // Redirects if there was a user returned.
+            return req.future(AnyResponse(redirectResponse))
+        }
+        .catchFlatMap { error -> (EventLoopFuture<AnyResponse>) in
+            // Catch only our errors.
+            guard let err = error as? LoginErrorContent else { throw error }
+
+            // Renders the login view again if authentication failed.
+            return renderer.render("login", err).map(AnyResponse.init)
         }
 
         return responseFuture

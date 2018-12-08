@@ -35,4 +35,8 @@ extension User: SessionAuthenticatable { }
 extension User: PasswordAuthenticatable {
     static var usernameKey: WritableKeyPath<User, String> = \.username
     static var passwordKey: WritableKeyPath<User, String> = \.passwordHash
+
+    public static func authenticate(username: String, password: String, on conn: DatabaseConnectable) -> NIO.EventLoopFuture<User?> {
+        return User.authenticate(username: username, password: password, using: BCryptDigest(), on: conn)
+    }
 }
