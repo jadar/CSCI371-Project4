@@ -9,7 +9,7 @@ import Vapor
 import FluentMySQL
 import DotEnv
 
-public func databases(config: inout DatabasesConfig) throws {
+public func databases(services: inout Services, config: inout DatabasesConfig) throws {
     let env = DotEnv(withFile: "env")
 
     guard let dbUsername = env["db_username"],
@@ -44,7 +44,7 @@ public func databases(config: inout DatabasesConfig) throws {
     Waypoint.defaultDatabase = .mysql
 
 //    /// Configure migrations
-//    var migrations = MigrationConfig()
-//    migrations.add(model: Todo.self, database: .sqlite)
-//    services.register(migrations)
+    var migrations = MigrationConfig()
+    migrations.prepareCache(for: .mysql)
+    services.register(migrations)
 }

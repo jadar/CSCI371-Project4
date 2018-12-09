@@ -9,24 +9,29 @@ import Vapor
 import FluentMySQL
 import Authentication
 
+enum UserType: Int, CaseIterable, MySQLEnumType {
+    case driver
+    case administrator
+}
+
 final class User: _MySQLModel {
     typealias ID = Int
 
     var userID: Int?
     var username: String
     var email: String
-
-//    var sessionID: String?
     var passwordHash: String
+    var type: UserType
 
     static var idKey: IDKey = \.userID
 
     /// Creates a new ``.
-    init(userID: ID?, username: String, email: String, password: String) throws {
+    init(userID: ID?, username: String, email: String, password: String, type: UserType = .driver) throws {
         self.userID = userID
         self.username = username
         self.email = email
         self.passwordHash = try BCrypt.hash(password)
+        self.type = type
     }
 }
 

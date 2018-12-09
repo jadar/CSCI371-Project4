@@ -3,6 +3,8 @@ import FluentMySQL
 import Authentication
 import Leaf
 
+typealias MySQLCache = DatabaseKeyedCache<ConfiguredDatabase<MySQLDatabase>>
+
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     try services.register(FluentMySQLProvider())
@@ -16,19 +18,23 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try routes(authenticatedRouter)
     
     services.register(router, as: Router.self)
-
-    config.prefer(MemoryKeyedCache.self, for: KeyedCache.self)
     
     /// Register middleware
     var middlewaresConfig = MiddlewareConfig() // Create empty middleware config
     try middlewares(config: &middlewaresConfig)
-//    middlewaresConfig.use(session)
     services.register(middlewaresConfig)
 
     /// Register the configured SQLite database to the database config.
     var databasesConfig = DatabasesConfig()
-    try databases(config: &databasesConfig)
+    try databases(services: &services, config: &databasesConfig)
     services.register(databasesConfig)
+
+    /// Register MySQL as a cache provider.
+    services.register(KeyedCache.self) { container -> MySQLCache in
+        let pool = try container.connectionPool(to: .mysql)
+        return .init(pool: pool)
+    }
+    config.prefer(MySQLCache.self, for: KeyedCache.self)
 
     // Configure the templating engine.
     let leaf = LeafProvider()

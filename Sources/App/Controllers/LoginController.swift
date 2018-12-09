@@ -37,33 +37,24 @@ final class LoginController {
         let contentFuture = try req.content.decode(LoginContent.self)  // Decode the form data.
 
         // Construct a future that tries to authenticate with the given username/password.
-        // Compounds the original context for additional context.
+        // Compounds the user for additional context.
         let userFuture = contentFuture
-            .then({ User.authenticate(username: $0.username, password: $0.password, on: req).and(result: $0) })
-            .map { (result, content) -> User in
-                guard let user = result else {  // Throw an error when the user is nil!
-                    throw LoginErrorContent(error: "Invalid login", usernameInput: content.username)
+            .then { User.authenticate(username: $0.username, password: $0.password, on: req).and(result: $0) }
+            .flatMap { (result, content) -> Future<AnyResponse> in
+                guard let user = result else {
+                    // Renders the login view again if authentication failed.
+                    let err = LoginErrorContent(error: "Invalid login", usernameInput: content.username)
+                    return renderer.render("login", err).map(AnyResponse.init)
                 }
 
                 // Authenticate the request with the user.
                 try req.authenticate(user)
-                return user
+
+                // Redirects if there was authentication.
+                return req.future(AnyResponse(req.redirect(to: "/")))
             }
 
-        // Construct a future that uses the user.
-        let responseFuture = userFuture.then { (result) -> EventLoopFuture<AnyResponse> in
-            let redirectResponse = req.redirect(to: "/")  // Redirects if there was a user returned.
-            return req.future(AnyResponse(redirectResponse))
-        }
-        .catchFlatMap { error -> (EventLoopFuture<AnyResponse>) in
-            // Catch only our errors.
-            guard let err = error as? LoginErrorContent else { throw error }
-
-            // Renders the login view again if authentication failed.
-            return renderer.render("login", err).map(AnyResponse.init)
-        }
-
-        return responseFuture
+        return userFuture
     }
 
     func logout(_ req: Request) throws -> Response {
