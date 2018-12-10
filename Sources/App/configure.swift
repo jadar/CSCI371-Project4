@@ -18,6 +18,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try routes(authenticatedRouter)
     
     services.register(router, as: Router.self)
+    services.register(UnauthenticatedRedirectMiddleware.self)
     
     /// Register middleware
     var middlewaresConfig = MiddlewareConfig() // Create empty middleware config

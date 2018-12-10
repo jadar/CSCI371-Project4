@@ -6,12 +6,15 @@
 //
 
 import Vapor
+import Authentication
 
 public func middlewares(config: inout MiddlewareConfig) throws {
     config.use(FileMiddleware.self) // Serves files from `Public/` directory
 //    config.use(makeErrorMiddleware()) // Catches errors and converts to HTTP response
+
     config.use(ErrorMiddleware.self)
-    
+    config.use(UnauthenticatedRedirectMiddleware.self)
+
     config.use(SessionsMiddleware.self)
 }
 
