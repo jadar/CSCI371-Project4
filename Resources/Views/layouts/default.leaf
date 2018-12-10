@@ -6,6 +6,8 @@
 			#get(content)
 		</div>
 	</div>
+	
+	#embed("includes/footer")
 }
 
 #embed("layouts/base")

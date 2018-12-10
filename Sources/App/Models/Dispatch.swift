@@ -21,6 +21,10 @@ final class Dispatch: _MySQLModel {
 
     static var idKey: IDKey = \.dispid
 
+    var truck: Parent<Dispatch, Truck> {
+        return parent(\.truckid)
+    }
+
     /// Creates a new ``.
     init(dispid: ID?, dispdate: Date, orderdate: Date, price: Double, routeid: Route.ID, custid: Customer.ID, truckid: Truck.ID) {
         self.dispid = dispid

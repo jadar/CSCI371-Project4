@@ -14,7 +14,7 @@ final class DriverController {
     }
 
     func boot(_ router: Router) {
-        router.get(use: index)
+        router.get("drivers", use: index)
     }
 
     /// Returns a list of all `Driver`s.
@@ -24,7 +24,7 @@ final class DriverController {
 
         return Driver.query(on: req).all().then { (res) -> Future<View> in
             let context = DriverContext(data: res, user: user)
-            return renderer.render("index", context)
+            return renderer.render("drivers", context)
         }
     }
 }

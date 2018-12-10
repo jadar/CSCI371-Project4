@@ -1,0 +1,63 @@
+<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">Upcoming Dispatches</h3>
+	</div>	
+	<div class="table-responsive">
+		<table class="table card-table table-vcenter text-nowrap datatable">
+			<thead>
+			<tr>
+				<th class="w-1">No.</th>
+				<th>Date</th>
+				<th>Order Date</th>
+				<th>Price</th>
+				<th>Customer</th>
+				<th>Driver</th>
+				<th></th>
+			</tr>
+			</thead>
+
+			<tbody>
+				#for(dispatch in upcomingDispatches) {
+					<tr>
+						<td><span class="text-muted">#get(dispatch.dispid)</span></td>
+						<td>
+							#date(dispatch.dispdate, "yyyy-MM-dd")
+						</td>
+						<td>
+							#date(dispatch.orderdate, "yyyy-MM-dd")
+						</td>
+						<td>
+							$#get(dispatch.price)
+						</td>
+						<td>
+							#if(dispatch.customername) {
+								#get(dispatch.customername) (#get(dispatch.customerid))
+							} else {
+								Unknown
+							}
+						</td>
+						<td>
+							#if(dispatch.drivername) {
+								#get(dispatch.drivername)
+							} else {
+								Not assigned
+							}
+						</td>
+						
+						<td class="text-right">
+							#if(dispatch.drivername) {} else {
+								<a href="javascript:void(0)" class="btn btn-secondary btn-sm">Assign Driver</a>
+							}
+							<a href="javascript:void(0)" class="btn btn-secondary btn-sm">Manage</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<script>
+			require(['datatables', 'jquery'], function(datatable, $) {
+				$('.datatable').DataTable();
+			});		
+		</script>
+	</div>
+</div>

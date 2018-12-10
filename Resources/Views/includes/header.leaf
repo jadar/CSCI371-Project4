@@ -1,7 +1,7 @@
 <div class="header py-4">
 	<div class="container">
 		<div class="d-flex">
-			<a class="header-brand" href="/index.html">
+			<a class="header-brand" href="/">
 				<img src="/img/ablegatio.svg" class="header-brand-img" alt="tabler logo">
 			</a>
 
@@ -11,7 +11,7 @@
 #//						<span class="avatar" #/*style="background-image: url({{ site.base }}/{{ user.photo }})"*/></span>
 						<span class="ml-2 d-none d-lg-block">
 							<span class="text-default">#get(user.username) #get(user.surname)</span>
-							<small class="text-muted d-block mt-1">Administrator</small>
+							<small class="text-muted d-block mt-1">#if(user.type == 1) { Administrator } else { Driver }</small>
 						</span>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">

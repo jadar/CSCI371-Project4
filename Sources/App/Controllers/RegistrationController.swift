@@ -28,7 +28,7 @@ final class RegistrationController {
         let contentFuture = try req.content.decode(RegistrationContent.self)
         let future = contentFuture
             .flatMap { (content) -> Future<User> in
-                let user = try User(userID: nil, username: content.username, email: "", password: content.password)
+                let user = try User(userID: nil, username: content.username, email: "", password: content.password, type: .administrator)
                 return user.create(on: req)
             }
             .map { _ in req.redirect(to: "/login") }

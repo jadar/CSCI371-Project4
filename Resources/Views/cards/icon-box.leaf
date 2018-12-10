@@ -1,0 +1,22 @@
+#if(!iconboxcolor) { #set("iconboxcolor") {red} }
+#if(!iconboxicon) { #set("iconboxicon") {fa fa-dollar} }
+#if(!iconboxdescription) { #set("iconboxdescription") {16} }
+
+
+<div class="card p-3">
+	<div class="d-flex align-items-center">
+		<span class="stamp stamp-md bg-#get(iconboxcolor) mr-3">
+			<i class="#get(iconboxicon)"></i>
+		</span>
+		<div>
+			<h4 class="m-0"><a href="javascript:void(0)">#get(iconboxvalue) <small>#get(iconboxdescription)</small></a></h4>
+			<small class="text-muted">#get(iconboxsubtitle)</small>
+		</div>
+	</div>
+</div>
+
+#set("iconboxicon") {}
+#set("iconboxcolor") {}
+#set("iconboxvalue") {}
+#set("iconboxdescription") {}
+#set("iconboxsubtitle") {}

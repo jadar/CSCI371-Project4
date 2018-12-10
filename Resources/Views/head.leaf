@@ -24,10 +24,10 @@
 <script src="/js/require.min.js"></script>
 <script>
     requirejs.config({
-        baseUrl: ''
+        baseUrl: '/'
     });
 </script>
 
 <!-- Dashboard Core -->
 <link href="/css/app.css" rel="stylesheet" />
-<script src="/js/dashboard.js"></script>
+<!-- <script src="{{ site.base }}/assets/js/dashboard.js"></script> -->

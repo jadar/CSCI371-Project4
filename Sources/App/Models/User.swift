@@ -14,6 +14,18 @@ enum UserType: Int, CaseIterable, MySQLEnumType {
     case administrator
 }
 
+enum UserConfig {
+    case driver(Driver.ID)
+    case administrator
+
+    var type: UserType {
+        switch self {
+        case .administrator: return .administrator
+        case .driver: return .driver
+        }
+    }
+}
+
 final class User: _MySQLModel {
     typealias ID = Int
 
@@ -22,16 +34,28 @@ final class User: _MySQLModel {
     var email: String
     var passwordHash: String
     var type: UserType
+    var driverID: Driver.ID?
 
     static var idKey: IDKey = \.userID
 
+    var driver: Parent<User, Driver>? {
+        return parent(\.driverID)
+    }
+
     /// Creates a new ``.
-    init(userID: ID?, username: String, email: String, password: String, type: UserType = .driver) throws {
+    init(userID: ID?, username: String, email: String, password: String, type: UserConfig) throws {
         self.userID = userID
         self.username = username
         self.email = email
         self.passwordHash = try BCrypt.hash(password)
-        self.type = type
+
+        switch type {
+        case .driver(let driverID):
+            self.type = .driver
+            self.driverID = driverID
+        case .administrator:
+            self.type = .administrator
+        }
     }
 }
 

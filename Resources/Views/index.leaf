@@ -1,6 +1,6 @@
+#set("pageTitle") { Dashboard }
 #set("content") {
 	<div class="container">
-		#set("pageTitle") { Dashboard }
 		#embed("includes/page-header")
 
 		<div class="row row-cards row-deck">

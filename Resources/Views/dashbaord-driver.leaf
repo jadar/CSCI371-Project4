@@ -1,0 +1,25 @@
+#set("pageTitle") { Dashboard }
+#set("content") {
+	<div class="container">
+		#embed("includes/page-header")
+
+		<div class="row row-cards">
+			<div class="col-sm-6 col-lg-3">
+				#set("iconboxicon") {fe fe-box}
+				#set("iconboxcolor") {red}
+				#set("iconboxvalue") { #get(numDispatches) }
+				#set("iconboxdescription") {Dispatches}
+				#set("iconboxsubtitle") {this week}
+				#embed("cards/icon-box")
+			</div>
+		</div>
+
+		<div class="row row-cards row-deck">
+			<div class="col-12">
+				#embed("cards/upcoming-dispatches.leaf")
+			</div>
+		</div>
+	</div>
+}
+
+#embed("layouts/default")
