@@ -1,3 +1,4 @@
+#set("menuTitle") {Drivers}
 #set("content") {
 	<div class="container">
 		#set("pageTitle") { Drivers }

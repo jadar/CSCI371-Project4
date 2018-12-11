@@ -1,4 +1,5 @@
 #set("pageTitle") { Dashboard }
+#set("menuTitle"){Drivers}
 #set("content") {
 	<div class="container">
 		#embed("includes/page-header")

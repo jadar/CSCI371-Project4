@@ -50,7 +50,12 @@
 	<div class="container">
 		<div class="row align-items-center">
 			<div class="col-lg order-lg-first">
-				#embed("includes/menu")
+                #embed("includes/menu")
+#//				#if(user.type == 0) {
+#//					#embed("includes/driver-menu")
+#//				} else {
+#//					#embed("includes/admin-menu")
+#//				}
 			</div>
 		</div>
 	</div>

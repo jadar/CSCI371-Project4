@@ -28,6 +28,14 @@ final class DashboardController {
             var user: User
             var upcomingDispatches: [Dispatch]
             var numDispatches: Int
+            var menuItems: [MenuItem]
+
+            init(user: User, upcomingDispatches: [Dispatch], numDispatches: Int) {
+                self.user = user
+                self.upcomingDispatches = upcomingDispatches
+                self.numDispatches = numDispatches
+                self.menuItems = user.availableMenuItems
+            }
         }
 
         let renderer = try req.view()
@@ -62,6 +70,15 @@ final class DashboardController {
             var upcomingDispatches: [Dispatch]
             var numSales: Int
             var numDispatches: Int
+            var menuItems: [MenuItem]
+
+            init(user: User, upcomingDispatches: [Dispatch], numSales: Int, numDispatches: Int) {
+                self.user = user
+                self.numSales = numSales
+                self.upcomingDispatches = upcomingDispatches
+                self.numDispatches = numDispatches
+                self.menuItems = user.availableMenuItems
+            }
         }
 
         let renderer = try req.view()

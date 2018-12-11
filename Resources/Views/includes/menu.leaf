@@ -1,6 +1,7 @@
 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
-#//	<li class="nav-item{% if data.subpages %} dropdown{% endif %}">
-	<li class="nav-item">
-		<a href="/" class="nav-link active"><i class="fe fe-home"></i>Home</a>
-	</li>	
+	#for(item in menuItems) {
+		<li class="nav-item">
+			<a href="#get(item.path)" class="nav-link #if(menuTitle == item.title){active}"><i class="#get(item.icon)"></i>#get(item.title)</a>
+		</li>
+	}
 </ul>
