@@ -18,11 +18,20 @@ final class Dispatch: _MySQLModel {
     var routeid: Route.ID
     var custid: Customer.ID
     var truckid: Truck.ID
+    var driverid: Driver.ID?
 
     static var idKey: IDKey = \.dispid
 
     var truck: Parent<Dispatch, Truck> {
         return parent(\.truckid)
+    }
+
+    var customer: Parent<Dispatch, Customer> {
+        return parent(\.custid)
+    }
+
+    var driver: Parent<Dispatch, Driver>? {
+        return parent(\.driverid)
     }
 
     /// Creates a new ``.

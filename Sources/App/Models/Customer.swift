@@ -18,6 +18,28 @@ final class Customer: _MySQLModel {
 
     static var idKey: IDKey = \.custid
 
+    var dispatches: Children<Customer, Dispatch> {
+        return children(\.custid)
+    }
+
+    var referrerCustomer: Parent<Customer, Customer>? {
+        return parent(\.referrercustid)
+    }
+
+    func numDispatches(on conn: DatabaseConnectable) throws -> Int {
+        return try dispatches.query(on: conn).count().wait()
+    }
+
+    var shortName: String {
+        var name = ""
+        if let firstChar = custfname.first {
+            name += "\(firstChar). "
+        }
+        name += custlname
+        name += " (\(custid!))"
+        return name
+    }
+
     /// Creates a new ``.
     init(custid: ID?, custfname: String, custlname: String, referrercustid: ID?) {
         self.custid = custid
@@ -25,13 +47,15 @@ final class Customer: _MySQLModel {
         self.custlname = custlname
         self.referrercustid = referrercustid
     }
+
+    
 }
 
 /// Allows `Building` to be used as a dynamic migration.
 extension Customer: Migration { }
 
 /// Allows `Building` to be encoded to and decoded from HTTP messages.
-extension Customer: Content { }
+extension Customer: Content {}
 
 /// Allows `Building` to be used as a dynamic parameter in route definitions.
 extension Customer: Parameter { }

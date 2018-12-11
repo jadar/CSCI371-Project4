@@ -24,6 +24,9 @@ public func routes(_ router: Router) throws {
 
     let dispatchController = DispatchController()
     dispatchController.boot(router)
+
+    let customerController = CustomerController()
+    customerController.boot(router)
 }
 
 struct MenuItem: Encodable {

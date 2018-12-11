@@ -26,6 +26,16 @@ final class Driver: _MySQLModel {
         return parent(\.drivingtruckid)
     }
 
+    var shortName: String {
+        var name = ""
+        if let firstChar = driverfname.first {
+            name += "\(firstChar). "
+        }
+        name += driverlname
+        name += " (\(driverid!))"
+        return name
+    }
+
     /// Creates a new `Driver`.
     init(driverid: String?, driverlicenseno: String, driverfname: String, driverlname: String, callsign: String, dateofbirth: Date, radioid: Radio.ID, drivingtruckid: Truck.ID?) {
         self.driverid = driverid

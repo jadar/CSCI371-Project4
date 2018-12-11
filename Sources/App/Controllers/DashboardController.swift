@@ -26,13 +26,14 @@ final class DashboardController {
     private func renderDriverDashboard(on req: Request, with user: User) throws -> Future<View> {
         struct DriverContext: Encodable {
             var user: User
-            var upcomingDispatches: [Dispatch]
+            var dispatches: [Dispatch]
             var numDispatches: Int
             var menuItems: [MenuItem]
+            var routeType = RouteType.home
 
-            init(user: User, upcomingDispatches: [Dispatch], numDispatches: Int) {
+            init(user: User, dispatches: [Dispatch], numDispatches: Int) {
                 self.user = user
-                self.upcomingDispatches = upcomingDispatches
+                self.dispatches = dispatches
                 self.numDispatches = numDispatches
                 self.menuItems = user.availableMenuItems
             }
@@ -48,7 +49,7 @@ final class DashboardController {
             throw Abort(.internalServerError)
         }
 
-        let upcomingDispatchesFuture = driverParent.get(on: req).flatMap({ driver -> Future<[Dispatch]> in
+        let dispatchesFuture = driverParent.get(on: req).flatMap({ driver -> Future<[Dispatch]> in
             driver.dispatchQuery(on: req)
                 .filter(\.dispdate, .greaterThanOrEqual, today)
                 .all()
@@ -59,23 +60,24 @@ final class DashboardController {
             .filter(\.dispdate, .lessThanOrEqual, endOfWeek)
             .count()
 
-        return flatMap(upcomingDispatchesFuture, numDispatchesFuture) { (dispatches, numDispatches) -> Future<View> in
-            return renderer.render("dashbaord-driver", DriverContext(user: user, upcomingDispatches: dispatches, numDispatches: numDispatches))
+        return flatMap(dispatchesFuture, numDispatchesFuture) { (dispatches, numDispatches) -> Future<View> in
+            return renderer.render("dashbaord-driver", DriverContext(user: user, dispatches: dispatches, numDispatches: numDispatches))
         }
     }
 
     private func renderAdminDashboard(on req: Request, with user: User) throws -> Future<View> {
         struct AdminContext: Encodable {
             var user: User
-            var upcomingDispatches: [Dispatch]
+            var dispatches: [Dispatch]
             var numSales: Int
             var numDispatches: Int
             var menuItems: [MenuItem]
+            var routeType = RouteType.home
 
-            init(user: User, upcomingDispatches: [Dispatch], numSales: Int, numDispatches: Int) {
+            init(user: User, dispatches: [Dispatch], numSales: Int, numDispatches: Int) {
                 self.user = user
                 self.numSales = numSales
-                self.upcomingDispatches = upcomingDispatches
+                self.dispatches = dispatches
                 self.numDispatches = numDispatches
                 self.menuItems = user.availableMenuItems
             }
@@ -87,7 +89,7 @@ final class DashboardController {
         let startOfWeek = today.weekday.days.earlier
         let endOfWeek = 6.days.later(than: startOfWeek)
 
-        let upcomingDispatchesFuture = Dispatch.query(on: req)
+        let dispatchesFuture = Dispatch.query(on: req)
                                                .filter(\.dispdate, .greaterThanOrEqual, today)
                                                .all()
         let numSalesFuture = Dispatch.query(on: req)
@@ -99,8 +101,8 @@ final class DashboardController {
                                           .filter(\.dispdate, .lessThanOrEqual, endOfWeek)
                                           .count()
 
-        return flatMap(upcomingDispatchesFuture, numSalesFuture, numDispatchesFuture) { (dispatches, numSales, numDispatches) -> Future<View> in
-            return renderer.render("dashboard-admin", AdminContext(user: user, upcomingDispatches: dispatches, numSales: numSales, numDispatches: numDispatches))
+        return flatMap(dispatchesFuture, numSalesFuture, numDispatchesFuture) { (dispatches, numSales, numDispatches) -> Future<View> in
+            return renderer.render("dashboard-admin", AdminContext(user: user, dispatches: dispatches, numSales: numSales, numDispatches: numDispatches))
         }
     }
 }

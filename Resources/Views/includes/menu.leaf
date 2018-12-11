@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
 	#for(item in menuItems) {
 		<li class="nav-item">
-			<a href="#get(item.path)" class="nav-link #if(menuTitle == item.title){active}"><i class="#get(item.icon)"></i>#get(item.title)</a>
+			<a href="#get(item.path)" class="nav-link #if(routeType == item.routeType){active}"><i class="#get(item.icon)"></i>#get(item.title)</a>
 		</li>
 	}
 </ul>

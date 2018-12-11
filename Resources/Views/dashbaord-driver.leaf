@@ -1,4 +1,7 @@
 #set("pageTitle") { Dashboard }
+
+#set("upcomingDispatches") {#get(dispatches)}
+
 #set("content") {
 	<div class="container">
 		#embed("includes/page-header")
@@ -16,7 +19,8 @@
 
 		<div class="row row-cards row-deck">
 			<div class="col-12">
-				#embed("cards/upcoming-dispatches.leaf")
+				#set("dispatchCardTitle") {Upcoming Dispatches}
+				#embed("cards/dispatches.leaf")
 			</div>
 		</div>
 	</div>

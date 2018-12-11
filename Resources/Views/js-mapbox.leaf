@@ -1,0 +1,51 @@
+#set("mapbox_url") {https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js}
+#set("mapbox_token") {pk.eyJ1IjoiamFkYXIiLCJhIjoiY2lmb2d3MnVnaGFveHM0bTczcHFhc2h1byJ9.mFDlnZuvxBCJhLrJ4viv8g}
+<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+<script>
+require(['jquery'], function ($) {
+	$(document).ready(function(){
+		L.mapbox.accessToken = "#get(mapbox_token)"
+		var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
+    attribution: '© <a href="https://www.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+});
+
+		var map = L.map('map').addLayer(mapboxTiles).setView([42.3610, -71.0587], 15);
+
+		// {% if data.points %}
+		// var mapPathCoordinates = [
+		// 	{% for point in data.points %}
+		// 	{lat: {{ point[0] }}, lng: {{ point[1] }}}{% unless forloop.last %},{% endunless %}
+		// 	{% endfor %}
+		// ];
+
+		// var bounds = new google.maps.LatLngBounds();
+		// for (var i = 0; i < mapPathCoordinates.length; i++) {
+		// 	var marker = new google.maps.Marker({
+		// 		position: mapPathCoordinates[i],
+		// 		icon: {
+		// 			path: google.maps.SymbolPath.CIRCLE,
+		// 			scale: 2,
+		// 			fillColor: '#fff',
+		// 			strokeColor: tabler.colors.{{ data.path-color | default: 'red' }},
+		// 		},
+		// 		map: map
+		// 	});
+
+		// 	bounds.extend(mapPathCoordinates[i]);
+		// }
+		// map.fitBounds(bounds);
+
+		// var mapPath = new google.maps.Polyline({
+		// 	path: mapPathCoordinates,
+		// 	geodesic: true,
+		// 	strokeColor: tabler.colors.{{ data.path-color | default: 'red' }},
+		// 	strokeOpacity: 1.0,
+		// 	strokeWeight: 3
+		// });
+		// mapPath.setMap(map);
+
+		// {% endif %}
+	});
+});
+</script>
