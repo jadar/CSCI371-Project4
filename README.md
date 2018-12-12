@@ -46,3 +46,7 @@ let dbConfig = DatabaseConfig(username: DB_USER, password: DB_PASS, name: DB_NAM
 Replace the all-caps placeholders with your DB username, password, and the DB to use.
 
 Make sure your MySQL servier is running. Finally, press the Run button (or cmd-R).
+
+### Additional Help
+
+If you are unable to get this running or run into issue, check out the (Vapor documentation)[https://docs.vapor.codes/].
