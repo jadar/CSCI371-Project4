@@ -1,8 +1,16 @@
+#set("pageTitle") { Dispatch }
 #set("content") {
 	<div class="container">
-		<div class="row">
-			<div class="col-12">
+		#embed("includes/page-header")
+
+		<div class="row row-cards">
+			<div class="col-lg-4 col-md-6">
+				#set("mapPlace"){#get(dispatch.streetAddress), #get(dispatch.city), #get(dispatch.state)}
+				#set("mapCardName") {Location}
 				#embed("cards/map")
+			</div>
+			<div class="col-lg-8 col-md-6">
+				#embed("cards/dispatch-detail")
 			</div>
 		</div>
 	</div>

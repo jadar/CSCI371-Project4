@@ -1,0 +1,56 @@
+<div class="card">
+	<div class="card-header">
+		<h3 class="card-title">Details</h3>
+		<div class="card-options">
+			<a href="edit" class="btn btn-option"><i class="fe fe-edit"></i></a>
+			<!-- <button type="button" class="btn btn-option" title="Edit" href="/edit"> -->
+			<!-- </button> -->
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="row">
+			<div class="col-6">
+				<div class="h6">Ordered by</div>
+				<p>#get(dispatch.customername)</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Ordered on</div>
+				<p>#date(dispatch.orderdate, "MM / dd / yyyy")</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Date needed</div>
+				<p>#date(dispatch.dispdate, "MM / dd / yyyy")</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Price charged</div>
+				<p>$#get(dispatch.price)</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Address</div>
+				<p>
+					#if(dispatch.streetAddress) {
+						#get(dispatch.streetAddress)
+						<br/>
+					}
+					#if(dispatch.city) {
+						#get(dispatch.city), #get(dispatch.state)
+					}
+				</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Truck</div>
+				<p>#get(dispatch.truckid)</p>
+			</div>
+			<div class="col-6">
+				<div class="h6">Driver</div>
+				<p>
+				#if(dispatch.drivername) {
+					#get(dispatch.drivername)</p>
+				} else {
+					<a href="assign_driver" class="btn btn-secondary btn-sm">Assign Driver</a>
+				}
+			</p>
+			</div>
+		</div>
+	</div>
+</div>

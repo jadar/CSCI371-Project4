@@ -1,11 +1,9 @@
 <div class="card">
 	<div class="card-header">
-		<h3 class="card-title">Map</h3>
+	<h3 class="card-title">#if(mapCardName) {#get(mapCardName)}else{Map}</h3>
 	</div>
 	<div class="card-body">
-		<div class="map map-square">
-			<div class="map" id="map"></div>
-		</div>
+		<div class="card-map" id="map"></div>
 	</div>
 </div>
 

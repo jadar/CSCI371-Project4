@@ -1,0 +1,28 @@
+#set("content") {
+	<div class="container">
+		#embed("includes/page-header")
+		<form action="/dispatches/#get(dispatch.dispid)/assign_driver" method="post" class="card">
+			<div class="card-body">
+				<h3 class="card-title">Assign driver</h3>
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label class="form-label">Choose a driver:</label>
+							<select name="driverid" class="form-control custom-select" required=''>
+								#for(driver in drivers) {
+									<option value="#get(driver.driverid)">#get(driver.driverfname) #get(driver.driverlname) (#get(driver.driverid))</option>
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer text-right">
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+}
+
+#embed("layouts/default")

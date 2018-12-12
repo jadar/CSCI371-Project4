@@ -18,6 +18,10 @@ final class Truck: _MySQLModel {
 
     static var idKey: IDKey = \.truckid
 
+    var drivers: Children<Truck, Driver> {
+        return children(\.drivingtruckid)
+    }
+
     /// Creates a new ``.
     init(truckid: ID?, truckmodel: String, misinceoilchange: Int, ownerdriverid: Driver.ID) {
         self.truckid = truckid

@@ -15,10 +15,14 @@ final class Dispatch: _MySQLModel {
     var dispdate: Date
     var orderdate: Date
     var price: Double
-    var routeid: Route.ID
+    var routeid: Route.ID?
     var custid: Customer.ID
     var truckid: Truck.ID
     var driverid: Driver.ID?
+
+    var streetAddress: String?
+    var city: String?
+    var state: String?
 
     static var idKey: IDKey = \.dispid
 
@@ -35,14 +39,35 @@ final class Dispatch: _MySQLModel {
     }
 
     /// Creates a new ``.
-    init(dispid: ID?, dispdate: Date, orderdate: Date, price: Double, routeid: Route.ID, custid: Customer.ID, truckid: Truck.ID) {
+    init(dispid: ID?, dispdate: Date, orderdate: Date, price: Double, streetAddress: String?, city: String?, state: String?, routeid: Route.ID?, custid: Customer.ID, truckid: Truck.ID) {
         self.dispid = dispid
         self.dispdate = dispdate
         self.orderdate = orderdate
         self.price = price
+        self.streetAddress = streetAddress
+        self.city = city
+        self.state = state
         self.routeid = routeid
         self.custid = custid
         self.truckid = truckid
+    }
+
+    func willCreate(on conn: MySQLConnection) throws -> EventLoopFuture<Dispatch> {
+        return Dispatch
+            .query(on: conn)
+            .max(\.dispid)
+            .map({ (possibleMaxID) -> Dispatch in
+            let newID: String
+            if let maxIDStr = possibleMaxID?.dropFirst(2),
+                let maxID = Int(maxIDStr) {
+                newID = "DP\(maxID + 1)"
+            } else {
+                newID = "DP1"
+            }
+
+            self.dispid = newID
+            return self
+        })
     }
 }
 

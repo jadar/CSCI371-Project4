@@ -1,8 +1,11 @@
 <div class="card">
 	<div class="card-header">
 		<h3 class="card-title">#if(dispatchCardTitle) {#get(dispatchCardTitle)}else{Dispatches}</h3>
+		<div class="card-options">
+			<a href="/dispatches/new" class="btn btn-primary"><i class="fe fe-plus"></i> New</a>
+		</div>
 	</div>	
-	<div class="table-responsive">
+<div class="table-responsive">
 		<table class="table card-table table-vcenter text-nowrap datatable">
 			<thead>
 			<tr>
@@ -10,6 +13,7 @@
 				<th>Date</th>
 				<th>Order Date</th>
 				<th>Price</th>
+				<th>Address</th>
 				<th>Customer</th>
 				<th>Driver</th>
 				<th></th>
@@ -30,8 +34,17 @@
 							$#get(dispatch.price)
 						</td>
 						<td>
+							#if(dispatch.streetAddress) {
+								#get(dispatch.streetAddress)
+								<br/>
+							}
+							#if(dispatch.city) {
+								#get(dispatch.city), #get(dispatch.state)
+							}
+						</td>
+						<td>
 							#if(dispatch.customername) {
-								#get(dispatch.customername) (#get(dispatch.customerid))
+								#get(dispatch.customername)
 							} else {
 								Unknown
 							}
@@ -47,7 +60,7 @@
 						<td class="text-right">
 							#if(dispatch.drivername) {} else {
 								#if(user.type == 1) {
-									<a href="javascript:void(0)" class="btn btn-secondary btn-sm">Assign Driver</a>
+									<a href="/dispatches/#(dispatch.dispid)/assign_driver" class="btn btn-secondary btn-sm">Assign Driver</a>
 								}
 							}
 							<a href="/dispatches/#(dispatch.dispid)/" class="btn btn-secondary btn-sm">Manage</a>

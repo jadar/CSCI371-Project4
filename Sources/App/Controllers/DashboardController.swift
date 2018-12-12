@@ -68,13 +68,13 @@ final class DashboardController {
     private func renderAdminDashboard(on req: Request, with user: User) throws -> Future<View> {
         struct AdminContext: Encodable {
             var user: User
-            var dispatches: [Dispatch]
+            var dispatches: [DispatchController.DispatchResponse]
             var numSales: Int
             var numDispatches: Int
             var menuItems: [MenuItem]
             var routeType = RouteType.home
 
-            init(user: User, dispatches: [Dispatch], numSales: Int, numDispatches: Int) {
+            init(user: User, dispatches: [DispatchController.DispatchResponse], numSales: Int, numDispatches: Int) {
                 self.user = user
                 self.numSales = numSales
                 self.dispatches = dispatches
@@ -90,8 +90,24 @@ final class DashboardController {
         let endOfWeek = 6.days.later(than: startOfWeek)
 
         let dispatchesFuture = Dispatch.query(on: req)
-                                               .filter(\.dispdate, .greaterThanOrEqual, today)
-                                               .all()
+            .filter(\Dispatch.dispdate, .greaterThanOrEqual, today)
+            .all()
+            .flatMap { (dispatches) -> Future<[DispatchController.DispatchResponse]> in
+                let futures = dispatches.map { dispatch -> Future<(Dispatch, (Customer, Driver?))> in
+                        let customerQuery = dispatch.customer.get(on: req)
+                        let driverQuery: Future<Driver?> = dispatch.driver?.get(on: req).map({ $0 }) ?? req.future(nil)
+                        return req.future(dispatch).and(customerQuery.and(driverQuery))
+                    }
+
+                return futures
+                    .flatten(on: req)
+                    .map { (data) -> ([DispatchController.DispatchResponse]) in
+                        return data.map({ (dispatch, additionalData) -> DispatchController.DispatchResponse in
+                            let (customer, driver) = additionalData
+                            return DispatchController.DispatchResponse(dispatch: dispatch, customer: customer.shortName, driver: driver?.shortName)
+                        })
+                    }
+            }
         let numSalesFuture = Dispatch.query(on: req)
                                      .filter(\.orderdate, .greaterThanOrEqual, startOfWeek)
                                      .filter(\.orderdate, .lessThanOrEqual, endOfWeek)
