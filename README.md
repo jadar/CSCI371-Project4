@@ -26,7 +26,7 @@ Import the provided SQL file located in the base of the repository into your MyS
 
 ### Running
 
-`vapor xcode`
+`vapor xcode`  
 `open Project4.xcodeproj`
 
 Xcode will now open.
