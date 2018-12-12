@@ -24,6 +24,10 @@ Run `brew install vapor/tap/vapor` to install the Vapor toolbox.
 
 Import the provided SQL file located in the base of the repository into your MySQL server. (This snapshot was taken with MySQL 5.7).
 
+The provided database has two users:
+(admin, password) - Administrator
+(test, password) - Driver
+
 ### Running
 
 `vapor xcode`  

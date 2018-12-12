@@ -21,11 +21,13 @@ public final class UnauthenticatedRedirectMiddleware: Middleware {
         do {
             response = try next.respond(to: req)
         } catch {
-            guard let _ = error as? AuthenticationError else { throw error }
-            response = req.future(req.redirect(to: path))
+            guard let authError = error as? AuthenticationError else { throw error }
+            response = req.eventLoop.newFailedFuture(error: authError)
         }
 
-        return response
+        return response.mapIfError { error in
+            return req.redirect(to: "/login")
+        }
     }
 
     public static func login(path: String = "/login") -> UnauthenticatedRedirectMiddleware {

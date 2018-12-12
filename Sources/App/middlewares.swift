@@ -10,7 +10,7 @@ import Authentication
 
 public func middlewares(config: inout MiddlewareConfig) throws {
     config.use(FileMiddleware.self) // Serves files from `Public/` directory
-    config.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     config.use(UnauthenticatedRedirectMiddleware.login()) // Catches unauthenticated errors and redirects to '/login'
+//    config.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     config.use(SessionsMiddleware.self) // Handles sessions.
 }
