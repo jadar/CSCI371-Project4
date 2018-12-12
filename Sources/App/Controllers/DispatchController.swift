@@ -113,7 +113,7 @@ final class DispatchController {
         let today = Date()
         let startOfWeek = today.weekday.days.earlier
 
-        return driver.dispatchQuery(on: req)
+        return try driver.dispatches.query(on: req)
             .filter(\.dispdate, .greaterThanOrEqual, startOfWeek)
             .all()
             .flatMap { (dispatches) -> Future<View> in

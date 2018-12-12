@@ -49,20 +49,22 @@ final class DashboardController {
             throw Abort(.internalServerError)
         }
 
-        let dispatchesFuture = driverParent.get(on: req).flatMap({ driver -> Future<[Dispatch]> in
-            driver.dispatchQuery(on: req)
+        return driverParent.get(on: req).flatMap({ driver -> Future<View> in
+            let dispatchesFuture = try driver.dispatches.query(on: req)
                 .filter(\.dispdate, .greaterThanOrEqual, today)
                 .all()
+
+            let numDispatchesFuture = try driver.dispatches.query(on: req)
+                .filter(\.dispdate, .greaterThanOrEqual, startOfWeek)
+                .filter(\.dispdate, .lessThanOrEqual, endOfWeek)
+                .count()
+
+            return flatMap(dispatchesFuture, numDispatchesFuture) { (dispatches, numDispatches) -> Future<View> in
+                return renderer.render("dashbaord-driver", DriverContext(user: user, dispatches: dispatches, numDispatches: numDispatches))
+            }
         })
 
-        let numDispatchesFuture = Dispatch.query(on: req)
-            .filter(\.dispdate, .greaterThanOrEqual, startOfWeek)
-            .filter(\.dispdate, .lessThanOrEqual, endOfWeek)
-            .count()
 
-        return flatMap(dispatchesFuture, numDispatchesFuture) { (dispatches, numDispatches) -> Future<View> in
-            return renderer.render("dashbaord-driver", DriverContext(user: user, dispatches: dispatches, numDispatches: numDispatches))
-        }
     }
 
     private func renderAdminDashboard(on req: Request, with user: User) throws -> Future<View> {

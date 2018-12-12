@@ -9,21 +9,27 @@ import Vapor
 import FluentMySQL
 import DotEnv
 
-public func databases(services: inout Services, config: inout DatabasesConfig) throws {
-    let env = DotEnv(withFile: "env")
+struct DatabaseConfig {
+    var username: String
+    var password: String
+    var name: String
+}
 
-    guard let dbUsername = env["db_username"],
-        let dbPassword = env["db_password"],
-        let dbName = env["db_name"] else {
-            throw VaporError(identifier: "DBError", reason: "Missing env config variables. Needs db_username, db_password, db_name.")
-    }
+public func databases(services: inout Services, config: inout DatabasesConfig) throws {
+//    let env = DotEnv(withFile: "env")
+
+//    guard let dbUsername = env["db_username"],
+//        let dbPassword = env["db_password"],
+//        let dbName = env["db_name"] else {
+//            throw VaporError(identifier: "DBError", reason: "Missing env config variables. Needs db_username, db_password, db_name.")
+//    }
 
     // Configure MySQL database.
     let mysql = MySQLDatabase(config: MySQLDatabaseConfig(hostname: "127.0.0.1",
                                                           port: 3306,
-                                                          username: dbUsername,
-                                                          password: dbPassword,
-                                                          database: dbName,
+                                                          username: dbConfig.username,
+                                                          password: dbConfig.password,
+                                                          database: dbConfig.name,
                                                           capabilities: .default,
                                                           characterSet: .utf8_general_ci,
                                                           transport: .cleartext))

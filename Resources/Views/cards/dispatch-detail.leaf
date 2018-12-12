@@ -2,7 +2,9 @@
 	<div class="card-header">
 		<h3 class="card-title">Details</h3>
 		<div class="card-options">
-			<a href="edit" class="btn btn-option"><i class="fe fe-edit"></i></a>
+			#if(user.type == 1) {
+				<a href="edit" class="btn btn-option"><i class="fe fe-edit"></i></a>
+			}
 			<!-- <button type="button" class="btn btn-option" title="Edit" href="/edit"> -->
 			<!-- </button> -->
 		</div>

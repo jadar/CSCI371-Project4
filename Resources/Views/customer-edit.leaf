@@ -1,0 +1,42 @@
+#set("content") {
+	<div class="container">
+		#embed("includes/page-header")
+		<form action="/customers/#get(customer.custid)" method="post" class="card">
+			<div class="card-body">
+				<h3 class="card-title">#if(customer){Edit Customer}else{Create Customer}</h3>
+
+				<div class="row">
+					<div class="col-sm-6 col-md-6">
+						<div class="form-group">
+							<label class="form-label">First Name</label>
+							<input name="custfname" type="text" class="form-control" placeholder="First name" value="#get(customer.custfname)" required=''>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6">
+						<div class="form-group">
+							<label class="form-label">Last Name</label>
+							<input name="custlname" type="text" class="form-control" placeholder="Last name" value="#get(customer.custlname)" required=''>
+						</div>
+					</div>
+
+					<div class="col-sm-6 col-md-6">
+						<div class="form-group">
+							<label class="form-label">Referrer</label>
+							<select name="referrercustid" class="form-control custom-select">
+								<option value="">None</option>
+								#for(customer in customers) {
+									<option value="#get(customer.custid)">#get(customer.custfname) #get(customer.custlname)</option>
+								}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer text-right">
+				<button type="submit" class="btn btn-primary">Save</button>
+			</div>
+		</form>
+	</div>
+}
+
+#embed("layouts/default")

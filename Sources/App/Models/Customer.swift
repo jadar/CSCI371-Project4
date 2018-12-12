@@ -48,7 +48,23 @@ final class Customer: _MySQLModel {
         self.referrercustid = referrercustid
     }
 
-    
+    func willCreate(on conn: MySQLConnection) throws -> EventLoopFuture<Customer> {
+        return Customer
+            .query(on: conn)
+            .max(\.custid)
+            .map({ (possibleMaxID) -> Customer in
+                let newID: String
+                if let maxIDStr = possibleMaxID?.dropFirst(1),
+                    let maxID = Int(maxIDStr) {
+                    newID = "C\(maxID + 1)"
+                } else {
+                    newID = "C1"
+                }
+
+                self.custid = newID
+                return self
+            })
+    }
 }
 
 /// Allows `Building` to be used as a dynamic migration.

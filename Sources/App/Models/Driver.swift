@@ -48,12 +48,17 @@ final class Driver: _MySQLModel {
         self.drivingtruckid = drivingtruckid
     }
 
+    var dispatches: Children<Driver, Dispatch> {
+        return children(\.driverid)
+    }
+
     /// Perform a query for the Dispatches that a Driver has through the truck they drive.
     func dispatchQuery(on conn: DatabaseConnectable) -> QueryBuilder<Database, Dispatch> {
         return Dispatch.query(on: conn)
-            .join(\Truck.truckid, to: \Dispatch.truckid) // Join from dispatch to truck.
-            .join(\Driver.driverid, to: \Truck.ownerdriverid) // Join from truck (building of the previous join) to the driver.
-            .filter(\Driver.driverid, .equal, self.driverid) // Filter out on Driver.
+            .join(\Driver.driverid, to: \Dispatch.driverid)
+//            .join(\Truck.truckid, to: \Dispatch.truckid) // Join from dispatch to truck.
+//            .join(\Driver.driverid, to: \Truck.ownerdriverid) // Join from truck (building of the previous join) to the driver.
+//            .filter(\Driver.driverid, .equal, self.driverid) // Filter out on Driver.
     }
 }
 
